@@ -1,6 +1,6 @@
 import numpy as np
 
-def dist(a,b):
+def dista(a,b):
 	#a,b are two lists , return the distance btw them
 	return np.linalg.norm(np.array(a)-np.array(b))
 
@@ -22,15 +22,15 @@ class Cluster:
 		self.centers=[]#list of centers
 		self.cent_to_cluster={}#
 		#self.initialise()
-	def dist(self,a,b):
-		return np.linalg.norm(np.array(a)-np.array(b))
+	#def dist(self,a,b):
+	#	return np.linalg.norm(np.array(a)-np.array(b))
 	
 	def initialise(self):
 		for idx,datapt in enumerate(self.data):
 			self.idx_to_datapt[idx]=datapt
 			self.datapt_to_idx[tuple(datapt)]=idx
 
-		self.dist_datapt_datapt = {i:{j:self.dist(self.idx_to_datapt[i],self.idx_to_datapt[j]) for j in range(self.no_of_pts)} for i in range(self.no_of_pts)}
+		self.dist_datapt_datapt = {i:{j:dista(self.idx_to_datapt[i],self.idx_to_datapt[j]) for j in range(self.no_of_pts)} for i in range(self.no_of_pts)}
 		#del d(a,a)
 		for i in self.dist_datapt_datapt:
 			del self.dist_datapt_datapt[i][i]
@@ -76,4 +76,4 @@ class Cluster:
 				self.clusters[self.labels[pt]]['pts'].append(pt)
 
 		print(self.labels)
-		print(self.clusters)
+		#print(self.clusters)
