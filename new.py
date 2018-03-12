@@ -1,4 +1,5 @@
 import numpy as np
+from math import inf
 
 def dista(a,b):
 	#a,b are two lists , return the distance btw them
@@ -37,6 +38,7 @@ class Cluster:
 
 		max_dist =  max(max([[z for z in v.values()] for v in self.dist_datapt_datapt.values()]))
 
+		print('calc done\n')
 		self.disimmilarity = {i:sum(self.dist_datapt_datapt[i].values())/self.no_of_pts for i in range(self.no_of_pts)}
 
 		for i in self.dist_datapt_datapt:
@@ -75,5 +77,39 @@ class Cluster:
 				self.labels[pt]=self.cent_to_cluster[cen_temp]
 				self.clusters[self.labels[pt]]['pts'].append(pt)
 
+		print(self.centers)	#print(self.clusters)
+		self.clus_rep_update()
+		print(self.centers)
 		print(self.labels)
-		#print(self.clusters)
+		print(len(self.labels))
+
+	def clus_rep_update(self,key=0):
+		if key==0:
+			for i in self.clusters:
+				temp = self.clusters[i]['pts'][0]
+				min = inf
+				for j in self.clusters[i]['pts']:
+					val = sum([dista(self.idx_to_datapt[j],self.idx_to_datapt[z]) for z in self.clusters[i]['pts'] if j!=z])
+					if val<min:
+						min = val 
+						temp = j
+				del self.cent_to_cluster[self.clusters[i]['center']]
+				self.centers.remove(self.clusters[i]['center'])
+				self.centers.append(temp)
+				self.cent_to_cluster[temp] = i
+				self.clusters[i]['center'] = temp
+		else:
+			i=key
+			temp = self.clusters[i]['pts'][0]
+			min = inf
+			for j in self.clusters[i]['pts']:
+				val = sum([dista(self.idx_to_datapt[j],self.idx_to_datapt[z]) for z in self.clusters[i]['pts'] if j!=z])
+				if val<min:
+					min = val
+					temp = j
+			del self.cent_to_cluster[self.clusters[i]['center']]
+			self.centers.remove(self.clusters[i]['center'])
+			self.centers.append(temp)
+			self.cent_to_cluster[temp] = i
+			self.clusters[i]['center'] = temp
+			
