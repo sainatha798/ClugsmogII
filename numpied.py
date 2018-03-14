@@ -1,4 +1,3 @@
-
 import numpy as np
 from math import inf
 
@@ -17,9 +16,9 @@ class Cluster:
 		self.idx_to_datapt={}
 		#this maps datapts to indices
 		self.datapt_to_idx={}
-		self.dist_datapt_datapt = {}
+		self.dist_datapt_datapt = None
 		self.dissimilarity = {}
-		self.near_neigh ={}
+		self.near_neigh = None
 		self.clusters={}
 		self.centers=[]#list of centers
 		self.cent_to_cluster={}#
@@ -28,32 +27,38 @@ class Cluster:
 	#	return np.linalg.norm(np.array(a)-np.array(b))
 	
 	def initialise(self):
+		self.data = np.array(self.data)
 		for idx,datapt in enumerate(self.data):
 			self.idx_to_datapt[idx]=datapt
 			self.datapt_to_idx[tuple(datapt)]=idx
 
-		self.dist_datapt_datapt = {i:{j:dista(self.idx_to_datapt[i],self.idx_to_datapt[j]) for j in range(self.no_of_pts)} for i in range(self.no_of_pts)}
+		#self.dist_datapt_datapt = {i:{j:dista(self.idx_to_datapt[i],self.idx_to_datapt[j]) for j in range(self.no_of_pts)} for i in range(self.no_of_pts)}
+		self.dist_datapt_datapt = np.linalg.norm(self.data - self.data[:,None], axis=-1)
+		self.disimmilarity = np.sum(self.dist_datapt_datapt,axis=1)/self.no_of_pts
+		self.dist_datapt_datapt[np.arange(self.dist_datapt_datapt.shape[0]), np.arange(self.dist_datapt_datapt.shape[0])] = np.nan
 		#del d(a,a)
-		for i in self.dist_datapt_datapt:
-			del self.dist_datapt_datapt[i][i]
+		#for i in self.dist_datapt_datapt:
+		#	del self.dist_datapt_datapt[i][i]
 
-		max_dist =  max(max([[z for z in v.values()] for v in self.dist_datapt_datapt.values()]))
+		max_dist =  np.max(self.dist_datapt_datapt)
 
 		print('calc done\n')
-		self.disimmilarity = {i:sum(self.dist_datapt_datapt[i].values())/self.no_of_pts for i in range(self.no_of_pts)}
+		#self.disimmilarity = {i:sum(self.dist_datapt_datapt[i].values())/self.no_of_pts for i in range(self.no_of_pts)}
 
-		for i in self.dist_datapt_datapt:
+		'''for i in self.dist_datapt_datapt:
 			p = list(self.dist_datapt_datapt[i].items())
 			p.sort(key=lambda x : x[1])
-			self.near_neigh[i] = [key for (key,value) in p][:self.L]
-			self.labels = np.zeros(self.no_of_pts)
-			count = 0
+			self.near_neigh[i] = [key for (key,value) in p][:self.L]'''
+		self.near_neigh = np.argsort(self.dist_datapt_datapt,axis=1)[:,self.L]
+		self.labels = np.zeros(self.no_of_pts)
+		count = 0
 
-			'''every cluster is first identfied by a key the cluster no which inturn is a dict containing 'center' and 'pts' '''
-		#intialisint the K clusters
+			#intialisint the K clusters
 
 		obj = set(list(range(self.no_of_pts)))
-		dis = self.disimmilarity.copy()
+		dis = {}
+		for i in range(self.disimmilarity.shape[0]):
+			dis[i]=self.disimmilarity[i]
 		while count<self.K:
 			count+=1
 			ch,ho = min(dis.items(), key=lambda x :x[1])
@@ -113,3 +118,4 @@ class Cluster:
 			self.centers.append(temp)
 			self.cent_to_cluster[temp] = i
 			self.clusters[i]['center'] = temp
+			
