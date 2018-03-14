@@ -95,7 +95,7 @@ class Cluster:
 				temp = self.clusters[i]['pts'][0]
 				min = inf
 				for j in self.clusters[i]['pts']:
-					val = sum([dista(self.idx_to_datapt[j],self.idx_to_datapt[z]) for z in self.clusters[i]['pts'] if j!=z])
+					val = sum([self.dist_datapt_datapt[j][z] for z in self.clusters[i]['pts'] if j!=z])
 					if val<min:
 						min = val 
 						temp = j
@@ -109,7 +109,7 @@ class Cluster:
 			temp = self.clusters[i]['pts'][0]
 			min = inf
 			for j in self.clusters[i]['pts']:
-				val = sum([dista(self.idx_to_datapt[j],self.idx_to_datapt[z]) for z in self.clusters[i]['pts'] if j!=z])
+				val = sum([self.dist_datapt_datapt[j][z] for z in self.clusters[i]['pts'] if j!=z])
 				if val<min:
 					min = val
 					temp = j
