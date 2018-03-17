@@ -1,4 +1,5 @@
 from numpied import *
+#from tree import *
 
 class Test(Cluster):
 	
