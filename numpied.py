@@ -28,6 +28,7 @@ class Cluster:
 	
 	def initialise(self):
 		self.data = np.array(self.data)
+		self.gravity = np.sum(self.data,axis=0)/self.data.shape[0]
 		for idx,datapt in enumerate(self.data):
 			self.idx_to_datapt[idx]=datapt
 			self.datapt_to_idx[tuple(datapt)]=idx
@@ -49,7 +50,8 @@ class Cluster:
 			p = list(self.dist_datapt_datapt[i].items())
 			p.sort(key=lambda x : x[1])
 			self.near_neigh[i] = [key for (key,value) in p][:self.L]'''
-		self.near_neigh = np.argsort(self.dist_datapt_datapt,axis=1)[:,self.L]
+		self.near_neigh = np.argsort(self.dist_datapt_datapt,axis=1)[:,:self.L]
+		self.dist_datapt_datapt[np.arange(self.dist_datapt_datapt.shape[0]), np.arange(self.dist_datapt_datapt.shape[0])] = 0
 		self.labels = np.zeros(self.no_of_pts)
 		count = 0
 
@@ -87,8 +89,8 @@ class Cluster:
 		self.clus_rep_update()
 		print(self.centers)
 		print(self.labels)
-		print(len(self.labels))
-
+		#print(len(self.labels))
+		#print(self.near_neigh)
 	def clus_rep_update(self,key=0):
 		if key==0:
 			for i in self.clusters:
