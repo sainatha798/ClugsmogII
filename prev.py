@@ -38,12 +38,12 @@ def calcpayoff(l1,l2):
 	 	sum2 = sum(l2)/len(l2)
 	 return (sum1,sum2)
 
-'''def tarverse(root):
+def tarverse(root):
 	if root.child_no==0:
 		return (root.payoff,root)
 	temp = [tarverse(j) for j in root.childs]
 	root.payoff = max(temp)[0]
-	root.path=max(temp)[1]'''
+	root.path=max(temp)[1]
 
 
 def nasheq():
