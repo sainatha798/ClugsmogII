@@ -1,7 +1,7 @@
 from numpied import *
 from check import *
 
-f = open('data','r')
+f = open('data_2','r')
 l=[]
 for i in f.readlines():
 	l.append(list(map(float,i.split(' '))))

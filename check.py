@@ -27,16 +27,17 @@ class Test(Cluster):
 
 		else:
 			conn=0
-			pts = self.clusters[key]['pts']
+			pts = set(self.clusters[key]['pts'])
 			for i in self.clusters[key]['pts']:
 				conn+= len(pts&set(self.near_neigh[i].tolist()))/self.L
 			conn /= len(self.clusters[key]['pts'])
-		print(conn)
+		#print(conn)
 		return conn
 
 	def step2(self):
 		self.clu_neigh={}
 		self.rev_neigh={}
+		#generating conflict clusters
 		for i in self.clusters:
 			temp=[(j,self.dist_datapt_datapt[self.clusters[j]['center']][self.clusters[i]['center']]) for j in self.clusters if j!=i]
 			self.clu_neigh[i]=min(temp,key=lambda x:x[1])
@@ -47,3 +48,30 @@ class Test(Cluster):
 		#print(self.clu_neigh)
 		self.conflict=[j for j in sorted(self.rev_neigh,key=lambda x:len(self.rev_neigh[x]),reverse=True) if len(self.rev_neigh[j])>1]
 		print(self.conflict)
+		#rev_neigh has the corresponding clusters which conflicted for Ci
+		for con in self.conflict:
+			players = [x[0] for x in self.rev_neigh[con]]
+
+			sorted(players,key=lambda x:self.dist_datapt_datapt[self.clusters[x]['center']][self.clusters[con]['center']])
+			print(players)
+			i=0
+			j=1
+			while(j<len(players)):
+				if self.Conn(key=players[i])>=self.Conn(key=players[j]):
+					leader=players[i]
+					follow =players[j]
+				else:
+					leader=players[j]
+					follow=players[i]
+				con_pts = set(self.clusters[con]['pts'])
+				set_lead = set()
+				set_follow = set()
+				for ix in self.clusters[leader]['pts']:
+					set_lead.update(set(self.near_neigh[ix])&con_pts)
+				for ix in self.clusters[follow]['pts']:
+					set_follow.update(set(self.near_neigh[ix])&con_pts)
+				print(set_lead,set_follow)
+
+				i+=1
+				j+=1
+
