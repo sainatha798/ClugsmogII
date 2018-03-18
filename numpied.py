@@ -108,7 +108,10 @@ class Cluster:
 				self.clusters[i]['center'] = temp
 		else:
 			i=key
-			temp = self.clusters[i]['pts'][0]
+			try:
+				temp = self.clusters[i]['pts'][0]
+			except:
+				return
 			min = inf
 			for j in self.clusters[i]['pts']:
 				val = sum([self.dist_datapt_datapt[j][z] for z in self.clusters[i]['pts'] if j!=z])

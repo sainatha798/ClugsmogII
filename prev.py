@@ -18,13 +18,13 @@ class Node():
 			self.payoff = self.path.payoff
 
 
-sets = list(range(0,4))
+'''sets = list(range(0,4))
 #global i
 i =0 
 level = 0 
 parent = None
 select1=[]
-select2=[]
+select2=[]'''
 
 def calcpayoff(l1,l2):
 	 #(sum(l1)/len(l1),sum(l2)/len(l2))
@@ -38,12 +38,12 @@ def calcpayoff(l1,l2):
 	 	sum2 = sum(l2)/len(l2)
 	 return (sum1,sum2)
 
-def tarverse(root):
+'''def tarverse(root):
 	if root.child_no==0:
 		return (root.payoff,root)
 	temp = [tarverse(j) for j in root.childs]
 	root.payoff = max(temp)[0]
-	root.path=max(temp)[1]
+	root.path=max(temp)[1]'''
 
 
 def nasheq():
@@ -60,7 +60,7 @@ def create(sets,parent,level,select1,select2):
 	#print(a.player)
 	if a.child_no==0:
 		a.payoff = calcpayoff(select1,select2)
-		print(a.sets,a.select1,a.select2)
+		#print(a.sets,a.select1,a.select2)
 		l.append(a)
 	else:
 		parent = a
@@ -78,12 +78,12 @@ def create(sets,parent,level,select1,select2):
 				create(a.sets[j+1:],parent,level+1,a.select1.copy(),temp.copy())
 	
 	return a
-
-i= 0
 l=[]
-root = create(sets,parent,level,select1,select2)
+#i= 0
+#l=[]
+#root = create(sets,parent,level,select1,select2	)
 
 #print(root.child_no)
-print(nasheq())
+
 #print(i)
-print(tarverse(root))
+#print(tarverse(root))
