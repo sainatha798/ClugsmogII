@@ -33,3 +33,17 @@ class Test(Cluster):
 			conn /= len(self.clusters[key]['pts'])
 		print(conn)
 		return conn
+
+	def step2(self):
+		self.clu_neigh={}
+		self.rev_neigh={}
+		for i in self.clusters:
+			temp=[(j,self.dist_datapt_datapt[self.clusters[j]['center']][self.clusters[i]['center']]) for j in self.clusters if j!=i]
+			self.clu_neigh[i]=min(temp,key=lambda x:x[1])
+			try:
+				self.rev_neigh[self.clu_neigh[i][0]].append((i,self.clu_neigh[i][1]))
+			except:
+				self.rev_neigh[self.clu_neigh[i][0]]=[(i,self.clu_neigh[i][1])]
+		#print(self.clu_neigh)
+		self.conflict=[j for j in sorted(self.rev_neigh,key=lambda x:len(self.rev_neigh[x]),reverse=True) if len(self.rev_neigh[j])>1]
+		print(self.conflict)
